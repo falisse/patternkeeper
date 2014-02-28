@@ -142,7 +142,6 @@ class FiveGProductSyncController extends \BaseController {
 				$channelproductslu = ChannelProductLU::whereRaw("shopify_product_id = ?", array($productId))->get();
 				$product_exists = (!$channelproductslu->isEmpty());
 				
-				$master_product_id = $channelproductslu->first()->product_id;
 				
 				if(!$product_exists){ // we need to create a product
 						$newProduct = FiveGProduct::create(array(
@@ -151,6 +150,9 @@ class FiveGProductSyncController extends \BaseController {
 				            'account_id' => $this->account
 				        ));
 					$master_product_id = $newProduct->id;	
+				} else {
+					$master_product_id = $channelproductslu->first()->product_id;
+				
 				}
 				
 				foreach($prods[$i][$depthkey] as $variant){		
@@ -177,7 +179,6 @@ class FiveGProductSyncController extends \BaseController {
 				// I'm going to make a large assumption that this is VEND based on the data structure for brevity
 				$channelproductslu = ChannelProductLU::whereRaw("vend_product_id = ?", array($productId))->get();
 				$product_exists = (!$channelproductslu->isEmpty());
-				$master_product_id = $channelproductslu->first()->product_id;
 				
 				if(!$product_exists){ // we need to create a product
 						$newProduct = FiveGProduct::create(array(
@@ -186,6 +187,9 @@ class FiveGProductSyncController extends \BaseController {
 				            'account_id' => $this->account
 				        ));
 					$master_product_id = $newProduct->id;	
+				} else {
+					$master_product_id = $channelproductslu->first()->product_id;
+				
 				}
 				
 					$productvariant = FiveGVariant::firstOrNew(array('sku' => $prods[$i]->sku));	
